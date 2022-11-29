@@ -4,16 +4,60 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {{ encore_entry_script_tags('app') }}
+            {% endif %}
         {% endblock %}
     </head>
     <body>
+    <main class="d-flex flex-nowrap">
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="flex-shrink-0 p-3 bg-light" style="height: 100vh; width: 280px;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+                    <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+                    <span class="fs-5 fw-semibold">Symfonotion</span>
+                </a>
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                            Espace de travail
+                        </button>
+                        <div class="collapse show" id="home-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small pages-list">
+                                {% for page in pages %}
+                                    <li>
+                                        <a href="{{ path('app_page', {'id': page.id}) }}"
+                                           class="link-dark d-inline-flex text-decoration-none rounded anchor-page {% if page.id == currentPage.id %}active{% endif %}"
+                                           data-id="{{ page.id }}">{{ page.title }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="border-top my-3"></li>
+                    <li class="text-center my-3">
+                        <button class="btn btn-sm btn-light d-inline-flex align-items-center rounded border-0" id="btn-add-page">
+                            Ajouter une page
+                        </button>
+                    </li>
+                    <li class="text-center">
+                        <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center rounded border-0">
+                            Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
         {% block body %}{% endblock %}
+    </main>
     </body>
 </html>

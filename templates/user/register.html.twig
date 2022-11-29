@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'inscrire{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 offset-xl-3">
+
+                <form action="{{ path('app_register') }}" method="post">
+                    <label for="username">Identifiant</label>
+                    <input class="form-control" type="text" id="username" name="username" autocomplete="off">
+
+                    <label for="password">Mot de passe</label>
+                    <input class="form-control mb-3" type="password" id="password" name="password" autocomplete="new-password">
+
+                    <input type="hidden" name="token" value="{{ csrf_token('register') }}">
+
+                    <button class="btn btn-primary w-100" type="submit">S'inscrire</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
